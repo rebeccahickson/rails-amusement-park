@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :attractions, through: :rides
 
   def mood
+    return if nausea.nil? || happiness.nil?
+
     if nausea > happiness
       'sad'
     else

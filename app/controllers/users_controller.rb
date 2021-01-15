@@ -1,15 +1,24 @@
 class UsersController < ApplicationController
-  def new; end
-
-  def create
-    new_user = User.new(user_params)
-    new_user.admin = false if new_user.admin.nil?
-    new_user.save
+  def new
+    @user = User.new
   end
 
-  def show; end
+  def create
+    if (@user = User.create(user_params))
+      session[:user_id] = @user.id
+      redirect_to user_path(@user)
+    else
+      render :new
+    end
+  end
+
+  def show
+    @current_user = current_user
+  end
+
+  def index; end
 
   def user_params
-    params.require(:user).permit(:name, :password_digest, :nausea, :happiness, :tickets, :height, :admin)
+    params.require(:user).permit(:name, :password, :nausea, :happiness, :tickets, :height, :admin)
   end
 end
